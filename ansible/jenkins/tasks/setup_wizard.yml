@@ -24,6 +24,7 @@
     login_password: "{{ lookup('aws_secret', 'revlearn/jenkins_login.jenkins_pw', nested=true) }}" 
     sonarqube_token: "{{ lookup('aws_secret', 'revlearn/access_tokens.sonarqube_token', nested=true) }}"
     github_token: "{{ lookup('aws_secret', 'revlearn/access_tokens.github_token', nested=true) }}"
+    webhook_token: "{{ lookup('aws_secret', 'revlearn/access_tokens.webhook_token', nested=true) }}"
     aws_secret_access_key: "{{ lookup('aws_secret', 'revlearn/aws_credentials.secret_access_key', nested=true) }}"
     aws_access_key_id: "{{ lookup('aws_secret', 'revlearn/aws_credentials.access_key', nested=true) }}"
 
@@ -51,6 +52,7 @@
     aws_access_key_id: "{{ aws_access_key_id }}"
     aws_secret_access_key: "{{ aws_secret_access_key }}"
     github_api_token: "{{ github_token }}"
+    github_webhook_secret: "{{ webhook_token }}"
   become: true
 
 - name: Create Pipelines for all components
@@ -61,6 +63,26 @@
     group: jenkins
     mode: 0755
   become: true
+
+- name: Configure GitHub Webhooks
+  community.general.github_webhook:
+    user: "{{ github_user }}"
+    token: "{{ github_token }}"
+    repository: "{{ item.repo_name }}"
+    content_type: json
+    secret: "{{ webhook_token }}"
+    url: "{{ base_url }}/github-webhook/"
+    state: present
+    events: 
+      - push
+    active: yes
+  loop:
+    - { repo_name: 'Will-Java-FS/revlearn-backend-team1' }
+    - { repo_name: 'Will-Java-FS/revlearn-frontend-team1' } 
+  delegate_to: localhost
+  become: false
+  vars:
+    ansible_python_interpreter: "{{ local_python_interpreter }}"
 
 
 - name: Restart Jenkins & Reload Daemon

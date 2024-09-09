@@ -112,18 +112,3 @@ unclassified:
     useExistingAccountWithSameEmail: false
   sonarGlobalConfiguration:
     buildWrapperEnabled: false
-tool:
-  git:
-    installations:
-    - home: "git"
-      name: "Default"
-  mavenGlobalConfig:
-    globalSettingsProvider: "standard"
-    settingsProvider: "standard"
-  pipelineMaven:
-    globalTraceability: false
-    triggerDownstreamUponResultAborted: false
-    triggerDownstreamUponResultFailure: false
-    triggerDownstreamUponResultNotBuilt: false
-    triggerDownstreamUponResultSuccess: true
-    triggerDownstreamUponResultUnstable: false
