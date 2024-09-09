@@ -4,13 +4,13 @@ data "terraform_remote_state" "network" {
   config = {
     bucket = "revlearn-tfstate"
     region = "us-east-1"
-    key    = "terraform.tfstate"
+    key    = "network/terraform.tfstate"
   }
 }
 
 module "kafka" {
   source = "../modules/kafka"
 
-  vpc_id     = data.terraform_remote_state.network.outputs.network_outputs.vpc_id
-  subnet_id = data.terraform_remote_state.network.outputs.network_outputs.public_subnet_ids[0]
+  vpc_id     = data.terraform_remote_state.network.outputs.vpc_id
+  subnet_id = data.terraform_remote_state.network.outputs.public_subnet_ids[0]
 }

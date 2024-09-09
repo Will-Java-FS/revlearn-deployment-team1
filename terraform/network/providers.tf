@@ -12,6 +12,6 @@ terraform {
     region         = "us-east-1"                    # Ensure this matches your bucket's region
     dynamodb_table = "app-state"              # Replace with the name of your DynamoDB table
     encrypt        = true
-    key            = "kafka/terraform.tfstate"
+    key            = "network/terraform.tfstate"
   }
 }

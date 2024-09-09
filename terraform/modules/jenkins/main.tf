@@ -9,7 +9,7 @@ resource "aws_key_pair" "jenkins_key_pair" {
 }
 
 resource "local_file" "jenkins_private_key_pem" { 
-  filename = "jenkins_private_key.pem"
+  filename = "../jenkins_private_key.pem"
   content = tls_private_key.jenkins_private_key.private_key_pem
   file_permission = "0400"
 }
