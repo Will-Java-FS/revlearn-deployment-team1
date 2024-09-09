@@ -26,6 +26,21 @@
     state: present
   loop: "{{ plugins_to_install }}"
 
+- name: Set JCasC Config location
+  blockinfile:
+    path: /etc/systemd/system/jenkins.service.d/override.conf
+    block: |
+      [Service]
+      Environment="CASC_JENKINS_CONFIG={{ config_dir }}"
+    create: yes  # Create the file if it doesn't exist
+    state: present
+    mode: '0644'
+
+- name: Copy configs
+  copy:
+    src: casc_configs  # Path to the source directory
+    dest: "{{ jenkins_home }}"  # Path to the destination directory
+
 - name: Restart Jenkins & Reload Daemon
   systemd:
     name: jenkins
