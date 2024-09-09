@@ -12,7 +12,7 @@ resource "aws_key_pair" "kafka_key_pair" {
 
 # Save the private key locally
 resource "local_file" "kafka_private_key_pem" { 
-  filename = "kafka_private_key.pem"
+  filename = "../kafka_private_key.pem"
   content  = tls_private_key.kafka_private_key.private_key_pem
   file_permission = "0400"
 }

@@ -1,0 +1,7 @@
+# playbook.yml
+---
+- hosts: kafka
+  become: yes
+  gather_facts: yes
+  roles:
+    - kafka
