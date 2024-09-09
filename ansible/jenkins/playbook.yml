@@ -1,0 +1,7 @@
+# playbook.yml
+---
+- hosts: jenkins
+  become: yes
+  gather_facts: yes
+  roles:
+    - jenkins

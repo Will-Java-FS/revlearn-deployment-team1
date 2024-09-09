@@ -59,7 +59,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 
 resource "aws_instance" "jenkins" {
   ami           = "ami-00beae93a2d981137"
-  instance_type = "t3.micro"
+  instance_type = "t3.medium"
   subnet_id     = var.subnet_id
   key_name = aws_key_pair.jenkins_key_pair.key_name
   associate_public_ip_address = true

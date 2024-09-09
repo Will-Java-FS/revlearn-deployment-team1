@@ -1,0 +1,51 @@
+# jenkins/tasks/setup_wizard.yml
+---
+- name: Ensure Jenkins initialization scripts directory exists
+  file:
+    path: "{{ groovy_init_dir }}"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0775
+
+- name: Disable Setup Wizard and Set Memory Size
+  blockinfile:
+    path: /etc/systemd/system/jenkins.service.d/override.conf
+    block: |
+      [Service]
+      Environment="JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Xms2g -Xmx2g"
+    create: yes  # Create the file if it doesn't exist
+    state: present
+    mode: '0644'
+
+- name: Retrieve login info from Secrets Manager
+  set_fact:
+    login_username: "{{ lookup('aws_secret', 'revlearn/jenkins_login.jenkins_username', nested=true) }}"
+    login_password: "{{ lookup('aws_secret', 'revlearn/jenkins_login.jenkins_pw', nested=true) }}" 
+
+- name: Create admin user 
+  template:
+    src: create_admin.groovy.j2
+    dest: "{{ groovy_init_dir }}/create_admin.groovy"
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+  vars:
+    admin_username: "{{ login_username }}"
+    admin_password: "{{ login_password }}"
+  become: true
+
+
+- name: Restart Jenkins & Reload Daemon
+  systemd:
+    name: jenkins
+    state: restarted
+    daemon_reload: yes
+  become: true
+
+- name: Wait for Jenkins port to be ready
+  wait_for:
+    port: 8080
+    delay: 10
+    timeout: 60
+

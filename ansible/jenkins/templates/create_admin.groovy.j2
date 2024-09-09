@@ -1,0 +1,25 @@
+#!groovy
+import jenkins.model.Jenkins
+import hudson.security.HudsonPrivateSecurityRealm
+import hudson.security.FullControlOnceLoggedInAuthorizationStrategy
+import hudson.model.User
+
+Jenkins jenkins = Jenkins.instance
+String username = '{{ admin_username }}'
+String password = '{{ admin_password }}'
+
+println "--> creating local user '${username}'"
+
+try {
+    jenkins.setSecurityRealm(new HudsonPrivateSecurityRealm(false))
+    jenkins.setAuthorizationStrategy(new FullControlOnceLoggedInAuthorizationStrategy())
+    jenkins.authorizationStrategy.setAllowAnonymousRead(false)
+    User user = jenkins.securityRealm.createAccount(username, password)
+    user.save()
+    jenkins.save()
+
+    println "--> User '${username}' created successfully."
+} catch (Exception e) {
+    println "--> Failed to create user '${username}': ${e.message}"
+    throw e
+}
