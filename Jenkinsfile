@@ -49,7 +49,7 @@ pipeline {
             steps {
                 script {
                     dir('terraform') {
-                        def dirs = ['rds', 'kafka', 'beanstalk', 's3-frontend'] // Add the directories you want to apply Terraform in
+                        def dirs = [ 'kafka', 'beanstalk', 's3-frontend'] // Add the directories you want to apply Terraform in
                         for (dirName in dirs) {
                             dir(dirName) { // Change to the specific subdirectory
                                 echo "Terraform Apply in ${dirName.capitalize()}"
