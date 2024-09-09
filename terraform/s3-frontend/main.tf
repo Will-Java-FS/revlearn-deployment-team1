@@ -1,9 +1,9 @@
 # S3 bucket for hosting frontend assets
 resource "aws_s3_bucket" "frontend_build" {
-  bucket = "frontend-build-bucket"
+  bucket = "revlearn-frontend-build"
 
   tags = {
-    Name = "frontend-build-bucket"
+    Name = "revlearn-frontend-build"
     Owner = "Trey-Crossley"
   }
 }
