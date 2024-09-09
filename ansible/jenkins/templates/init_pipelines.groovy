@@ -63,6 +63,11 @@ def jobConfigurations = [
         jobName: 'backend-pipeline',
         repoUrl: "${baseRepo}/revlearn-backend-team1.git"
     ],
+    [
+        jobName: 'terraform-pipeline',
+        repoUrl: "${baseRepo}/revlearn-deployment-team1.git",
+        autoBuild: true
+    ]
 ]
 
 jobConfigurations.each { config ->
