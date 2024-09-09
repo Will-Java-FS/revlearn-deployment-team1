@@ -19,7 +19,7 @@ variable "tags" {
   description = "Tags to apply to the resources"
   type        = map(string)
   default     = {
-    Name     = "revlearn_rds_tc"
+    Name     = "revlearn_rds"
     Owner    = "Trey-Crossley"
   }
 }
@@ -75,7 +75,7 @@ variable "instance_class" {
 variable "db_identifier" {
   description = "The DB instance identifier"
   type        = string
-  default     = "revlearn-db-tc"
+  default     = "revlearn-db"
 }
 
 variable "username" {
