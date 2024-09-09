@@ -1,0 +1,5 @@
+---
+# tasks file for jenkins
+- import_tasks: prereqs.yml
+- import_tasks: setup_wizard.yml
+- import_tasks: configure_plugins.yml

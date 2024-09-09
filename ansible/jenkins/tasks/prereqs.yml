@@ -1,0 +1,50 @@
+# jenkins/tasks/prereqs.yml
+---
+- name: Update package list and upgrade installed packages
+  dnf:
+    name: "*"
+    state: latest
+
+- name: Download Jenkins repository configuration file
+  get_url:
+    url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    dest: /etc/yum.repos.d/jenkins.repo
+
+- name: Import GPG key for Jenkins repository
+  rpm_key:
+    key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+    state: present
+
+- name: Install required packages including Jenkins
+  dnf:
+    name:
+      - java-17-amazon-corretto-devel
+      - git
+      - docker
+      - jenkins
+    state: present
+
+
+- name: Download and install TFLint
+  shell: curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+  args:
+    executable: /bin/bash
+
+- name: Add jenkins user to docker group
+  user:
+    name: jenkins
+    groups: docker
+    append: yes
+
+- name: Enable and start Docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Enable and start Jenkins service
+  service:
+    name: jenkins
+    state: started
+    enabled: yes
+  notify: Wait for Jenkins

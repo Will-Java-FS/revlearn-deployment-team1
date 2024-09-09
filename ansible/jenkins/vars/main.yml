@@ -1,0 +1,21 @@
+---
+# vars file for jenkins
+jenkins_home: /var/lib/jenkins
+groovy_init_dir: "{{ jenkins_home }}/init.groovy.d"
+config_dir: "{{ jenkins_home }}/casc_configs"
+ansible_python_interpreter: /usr/bin/python3.9
+jenkins_port: 8080
+base_url: http://{{ansible_host}}:{{jenkins_port}}
+plugins_to_install:
+  - "git"
+  - "docker-plugin"
+  - "workflow-aggregator"
+  - "nodejs"
+  - "configuration-as-code"
+  - "ws-cleanup"
+  - "pipeline-aws"
+  - "pipeline-maven"
+  - "pipeline-utility-steps"
+  - "workflow-basic-steps"
+  - "sonar"
+  - "terraform"
