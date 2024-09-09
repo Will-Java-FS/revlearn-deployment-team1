@@ -66,7 +66,7 @@ def jobConfigurations = [
     [
         jobName: 'terraform-pipeline',
         repoUrl: "${baseRepo}/revlearn-deployment-team1.git",
-        autoBuild: true
+        // autoBuild: true
     ]
 ]
 
