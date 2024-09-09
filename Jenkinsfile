@@ -55,8 +55,10 @@ pipeline {
                                 echo "Terraform Apply in ${dirName.capitalize()}"
                                 withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS}") {
                                     // Initialize and apply Terraform configurations
+
                                     sh 'terraform init -input=false'
                                     sh 'terraform validate'
+                                    sh 'terraform refresh'
                                     sh 'terraform plan'
                                     sh 'terraform apply -auto-approve'
                                 }
