@@ -84,6 +84,7 @@
   vars:
     ansible_python_interpreter: "{{ local_python_interpreter }}"
 
+
 - name: Restart Jenkins & Reload Daemon
   systemd:
     name: jenkins
