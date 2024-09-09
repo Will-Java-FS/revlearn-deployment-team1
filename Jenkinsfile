@@ -56,8 +56,9 @@ pipeline {
                                 withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS}") {
                                     // Initialize and apply Terraform configurations
                                     sh 'terraform init -input=false'
-                                    sh 'terraform state list'
                                     sh 'terraform validate'
+                                    sh 'terraform state list'
+                                    sh 'terraform plan'
                                     sh 'terraform apply -auto-approve'
                                 }
                             }
