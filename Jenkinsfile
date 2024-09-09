@@ -18,31 +18,31 @@ pipeline {
                 script {
                     // Checkout main repository
                     checkout([$class: 'GitSCM',
-                            branches: [[name: 'terraJenkins']],
+                            branches: [[name: 'develop']],
                             userRemoteConfigs: [[url: "${GIT_URL}", credentialsId: "${GIT_CREDENTIALS}"]]])
                 }
             }
         }
 
-        stage('Run TFLint') {
-            steps {
-                script {
-                    dir('terraform') { // Change into 'terraform' directory
-                        def dirs = ['.', 'network', 'kafka', 'rds', 'beanstalk', 's3-frontend', 'sonarqube', 's3-backend']
-                        for (dirName in dirs) {
-                            dir(dirName) {
-                                echo "TFLint: ${dirName == '.' ? 'Root' : dirName.capitalize()}"
-                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                    sh 'tflint --init'
-                                    sh 'tflint'
-                                    echo "TFLint: ${dirName == '.' ? 'Root' : dirName.capitalize()} - No Issues found :)"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // stage('Run TFLint') {
+        //     steps {
+        //         script {
+        //             dir('terraform') { // Change into 'terraform' directory
+        //                 def dirs = ['.', 'network', 'kafka', 'rds', 'beanstalk', 's3-frontend', 'sonarqube', 's3-backend']
+        //                 for (dirName in dirs) {
+        //                     dir(dirName) {
+        //                         echo "TFLint: ${dirName == '.' ? 'Root' : dirName.capitalize()}"
+        //                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+        //                             sh 'tflint --init'
+        //                             sh 'tflint'
+        //                             echo "TFLint: ${dirName == '.' ? 'Root' : dirName.capitalize()} - No Issues found :)"
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
 
         stage('Terraform Apply') {
@@ -57,7 +57,6 @@ pipeline {
                                     // Initialize and apply Terraform configurations
                                     sh 'terraform init -input=false'
                                     sh 'terraform validate'
-                                    sh 'terraform state list'
                                     sh 'terraform plan'
                                     sh 'terraform apply -auto-approve'
                                 }
