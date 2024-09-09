@@ -21,6 +21,36 @@
 - name: Add ec2-user to Docker group
   user:
     name: ec2-user
-    group: docker
+    groups: docker
     append: yes
+
+- name: Create Docker CLI plugins directory
+  file:
+    path: /usr/local/lib/docker/cli-plugins/
+    state: directory
+    mode: '0755'
+
+- name: Download Docker Compose V2
+  get_url:
+    url: "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64"
+    dest: /usr/local/lib/docker/cli-plugins/docker-compose
+    mode: '0755'
+
+
+- name: Make Docker Compose executable
+  file:
+    path: /usr/local/lib/docker/cli-plugins/docker-compose
+    mode: '0755'
+    state: file
+
+
+- name: Verify Docker Compose V2 installation
+  command: docker compose version
+  register: docker_compose_version
+
+
+- name: Show Docker Compose version
+  debug:
+    msg: "Docker Compose Version: {{ docker_compose_version.stdout }}"
+
 

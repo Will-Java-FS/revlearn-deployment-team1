@@ -1,0 +1,18 @@
+
+- name: Ensure Docker path exists
+  file:
+    path: "{{ docker_path }}"
+    state: directory
+    mode: '0755'
+
+
+- name: Copy Docker Compose file to EC2
+  template:
+    src: docker-compose.yml
+    dest: "{{ docker_path }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Start Docker Compose
+  command: "docker compose up -d"
+  args:
+    chdir: "{{ docker_path }}"
