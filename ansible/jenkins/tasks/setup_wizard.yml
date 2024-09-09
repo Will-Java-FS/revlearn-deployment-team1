@@ -53,6 +53,15 @@
     github_api_token: "{{ github_token }}"
   become: true
 
+- name: Create Pipelines for all components
+  template:
+    src: init_pipelines.groovy
+    dest: "{{ groovy_init_dir }}/init_pipelines.groovy"
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+  become: true
+
 
 - name: Restart Jenkins & Reload Daemon
   systemd:
