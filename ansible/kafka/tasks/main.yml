@@ -1,0 +1,4 @@
+---
+# tasks file for kafka
+- import_tasks: setup-docker.yml
+- import_tasks: run-docker.yml
