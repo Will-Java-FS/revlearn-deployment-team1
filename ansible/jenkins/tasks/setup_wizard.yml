@@ -22,6 +22,10 @@
   set_fact:
     login_username: "{{ lookup('aws_secret', 'revlearn/jenkins_login.jenkins_username', nested=true) }}"
     login_password: "{{ lookup('aws_secret', 'revlearn/jenkins_login.jenkins_pw', nested=true) }}" 
+    sonarqube_token: "{{ lookup('aws_secret', 'revlearn/access_tokens.sonarqube_token', nested=true) }}"
+    github_token: "{{ lookup('aws_secret', 'revlearn/access_tokens.github_token', nested=true) }}"
+    aws_secret_access_key: "{{ lookup('aws_secret', 'revlearn/aws_credentials.secret_access_key', nested=true) }}"
+    aws_access_key_id: "{{ lookup('aws_secret', 'revlearn/aws_credentials.access_key', nested=true) }}"
 
 - name: Create admin user 
   template:
@@ -33,6 +37,29 @@
   vars:
     admin_username: "{{ login_username }}"
     admin_password: "{{ login_password }}"
+  become: true
+
+- name: Init Credentials
+  template:
+    src: init_credentials.groovy.j2
+    dest: "{{ groovy_init_dir }}/init_credentials.groovy"
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+  vars:
+    sonarqube_api_token: "{{ sonarqube_token }}"
+    aws_access_key_id: "{{ aws_access_key_id }}"
+    aws_secret_access_key: "{{ aws_secret_access_key }}"
+    github_api_token: "{{ github_token }}"
+  become: true
+
+- name: Create Pipelines for all components
+  template:
+    src: init_pipelines.groovy
+    dest: "{{ groovy_init_dir }}/init_pipelines.groovy"
+    owner: jenkins
+    group: jenkins
+    mode: 0755
   become: true
 
 
