@@ -57,9 +57,6 @@ pipeline {
                                     // Initialize and apply Terraform configurations
 
                                     sh 'terraform init -input=false'
-                                    sh 'terraform validate'
-                                    sh 'terraform refresh'
-                                    sh 'terraform plan'
                                     sh 'terraform apply -auto-approve'
                                 }
                             }
