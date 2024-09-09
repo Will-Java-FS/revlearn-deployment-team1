@@ -1,13 +1,16 @@
 ---
 # vars file for jenkins
-jenkins_home: /var/lib/jenkins
+jenkins_home: "/var/lib/jenkins"
 groovy_init_dir: "{{ jenkins_home }}/init.groovy.d"
 config_dir: "{{ jenkins_home }}/casc_configs"
-ansible_python_interpreter: /usr/bin/python3.9
+ansible_python_interpreter: "/usr/bin/python3.9"
+local_python_interpreter: "/Users/admin/Documents/code/revature/revlearn-deployment-team1/virtenv/bin/python3"
 jenkins_port: 8080
-base_url: http://{{ansible_host}}:{{jenkins_port}}
+base_url: "http://{{ ansible_host }}:{{ jenkins_port }}"
+github_user: "treycrossley"
 plugins_to_install:
   - "git"
+  - "github"
   - "docker-plugin"
   - "workflow-aggregator"
   - "nodejs"
