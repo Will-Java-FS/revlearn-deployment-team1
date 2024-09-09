@@ -16,7 +16,7 @@ resource "local_file" "jenkins_private_key_pem" {
 
 
 resource "aws_iam_policy" "secrets_manager_policy" {
-  name        = "SecretsManagerPolicy"
+  name        = "SecretsManagerPolicy-Jenkins"
   description = "Allows full access to AWS Secrets Manager"
 
   policy = jsonencode({
@@ -32,7 +32,7 @@ resource "aws_iam_policy" "secrets_manager_policy" {
 }
 
 resource "aws_iam_role" "ec2_role" {
-  name               = "EC2SecretsManagerRole"
+  name               = "EC2SecretsManagerRole-Jenkins"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -53,7 +53,7 @@ resource "aws_iam_role_policy_attachment" "attach_secrets_manager_policy" {
 }
 
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "EC2SecretsManagerProfile"
+  name = "EC2SecretsManagerProfile-Jenkins"
   role = aws_iam_role.ec2_role.name
 }
 
