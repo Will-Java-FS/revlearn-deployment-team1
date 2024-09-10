@@ -52,7 +52,7 @@ def createOrUpdatePipelineJob(
 String baseRepo = 'https://github.com/Will-Java-FS/'
 String gitCredentialsId = 'github-api-token'
 String jenkinsfilePath = 'Jenkinsfile'
-String branchName = 'develop'
+String branchName = 'main'
 
 def jobConfigurations = [
     [
