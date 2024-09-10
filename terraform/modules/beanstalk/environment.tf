@@ -33,12 +33,6 @@ resource "aws_elastic_beanstalk_environment" "springboot_env" {
     value     = var.subnet_id
   }
 
-  setting {
-    namespace = "aws:elasticbeanstalk:s3:configuration"
-    name      = "BucketName"
-    value     = aws_s3_bucket.app_bucket.bucket
-  }
-
   tags = {
     Name = "revlearn-springboot-env"
     Owner = "Trey-Crossley"
