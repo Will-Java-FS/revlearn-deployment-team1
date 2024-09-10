@@ -29,7 +29,7 @@ tool:
       - installSource:
           installers:
           - nodeJSInstaller:
-              id: "14.20.0"
+              id: "22.6.0"
               npmPackagesRefreshHours: 0
   pipelineMaven:
     daoClass: "org.jenkinsci.plugins.pipeline.maven.dao.PipelineMavenPluginNullDao"
