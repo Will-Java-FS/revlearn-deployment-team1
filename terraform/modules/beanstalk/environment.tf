@@ -21,7 +21,7 @@ resource "aws_elastic_beanstalk_environment" "springboot_env" {
     value     = "SingleInstance" # LoadBalanced Or SingleInstance for smaller setups
   }
 
-    setting {
+  setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.vpc_id
@@ -31,6 +31,12 @@ resource "aws_elastic_beanstalk_environment" "springboot_env" {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
     value     = var.subnet_id
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "S3Bucket"
+    value     = aws_s3_bucket.app_bucket.bucket
   }
 
   tags = {
