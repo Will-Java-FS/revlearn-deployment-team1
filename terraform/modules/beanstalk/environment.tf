@@ -34,8 +34,8 @@ resource "aws_elastic_beanstalk_environment" "springboot_env" {
   }
 
   setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "S3Bucket"
+    namespace = "aws:elasticbeanstalk:s3:configuration"
+    name      = "BucketName"
     value     = aws_s3_bucket.app_bucket.bucket
   }
 
