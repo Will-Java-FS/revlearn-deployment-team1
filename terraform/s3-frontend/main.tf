@@ -2,15 +2,21 @@
 resource "aws_s3_bucket" "frontend_build" {
   bucket = "revlearn-frontend-build"
 
-  # Enable static website hosting
-  website {
-    index_document = "index.html"
-    error_document = "index.html"  # Serve index.html for all paths
-  }
-
   tags = {
     Name = "revlearn-frontend-build"
     Owner = "Trey-Crossley"
+  }
+}
+
+resource "aws_s3_bucket_website_configuration" "frontend_build_website" {
+  bucket = aws_s3_bucket.frontend_build.id
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "index.html"  # Serve index.html for all paths (common for single-page apps)
   }
 }
 
@@ -33,7 +39,9 @@ resource "aws_s3_bucket_policy" "frontend_build_policy" {
       {
         Effect = "Allow",
         Principal = "*",
-        Action = "s3:GetObject",
+        Action = [ 
+          "s3:GetObject",
+        ],
         Resource = "${aws_s3_bucket.frontend_build.arn}/*"
       }
     ]
