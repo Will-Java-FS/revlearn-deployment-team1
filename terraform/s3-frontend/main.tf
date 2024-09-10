@@ -1,6 +1,13 @@
 # S3 bucket for hosting frontend assets
 resource "aws_s3_bucket" "frontend_build" {
   bucket = "revlearn-frontend-build"
+  acl    = "public-read" # Allow public read access for static website hosting
+
+  # Enable static website hosting
+  website {
+    index_document = "index.html"
+    error_document = "index.html"  # Serve index.html for all paths
+  }
 
   tags = {
     Name = "revlearn-frontend-build"
