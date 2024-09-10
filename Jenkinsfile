@@ -132,7 +132,7 @@ pipeline {
                         def secretsJson = [
                             kafka_url: env.KAFKA_PUBLIC_DNS ?: '',
                             jenkins_url: env.JENKINS_PUBLIC_DNS ?: '',
-                            frontend_url: env.S3_BUCKET_URL ? "s3://${env.FRONTEND_BUCKET_NAME}" : '',
+                            frontend_url: env.S3_BUCKET_URL ?: '',
                             rds_url: env.RDS_ENDPOINT ?: '',
                             backend_url: env.BACKEND_URL ?: ''
                         ]
