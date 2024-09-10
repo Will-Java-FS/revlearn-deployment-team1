@@ -23,7 +23,7 @@ pipeline {
                 script {
                     // Checkout main repository
                     checkout([$class: 'GitSCM',
-                            branches: [[name: 'develop']],
+                            branches: [[name: 'main']],
                             userRemoteConfigs: [[url: "${GIT_URL}", credentialsId: "${GIT_CREDENTIALS}"]]])
                 }
             }
