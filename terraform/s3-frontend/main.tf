@@ -45,13 +45,3 @@ resource "aws_s3_bucket_cors_configuration" "frontend_build_cors" {
     max_age_seconds = 3000
   }
 }
-
-# Optional: Block public access to non-website-specific files
-resource "aws_s3_bucket_public_access_block" "frontend_build_public_access_block" {
-  bucket = aws_s3_bucket.frontend_build.id
-
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
-}
