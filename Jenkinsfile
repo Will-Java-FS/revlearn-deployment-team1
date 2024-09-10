@@ -89,7 +89,7 @@ pipeline {
                         if (jenkinsInstanceId) {
                             def jenkinsPublicDns = sh(script: "aws ec2 describe-instances --instance-ids ${jenkinsInstanceId} --query \"Reservations[*].Instances[*].PublicDnsName\" --output text", returnStdout: true).trim()
                             echo "Jenkins EC2 Public DNS: ${jenkinsPublicDns}"
-                            env.JENKINS_PUBLIC_DNS = jenkinsPublicDns
+                            env.JENKINS_PUBLIC_DNS = "http://" + jenkinsPublicDns
                         } else {
                             echo 'No Jenkins EC2 instance found'
                         }
@@ -107,7 +107,7 @@ pipeline {
                         // Find Frontend S3 Bucket
                         echo "Frontend S3 Bucket Name: ${env.FRONTEND_BUCKET_NAME}"
                         // Construct the S3 bucket URL
-                        def s3BucketUrl = "https://${env.FRONTEND_BUCKET_NAME}.s3.amazonaws.com/"
+                        def s3BucketUrl = "http://${env.FRONTEND_BUCKET_NAME}.s3.amazonaws.com/"
                         echo "Frontend S3 Bucket URL: ${s3BucketUrl}"
                         env.S3_BUCKET_URL = s3BucketUrl
 
@@ -115,7 +115,7 @@ pipeline {
                         def beanstalkUrl = sh(script: "aws elasticbeanstalk describe-environments --environment-names ${env.BEANSTALK_ENV_NAME} --query 'Environments[0].CNAME' --output text", returnStdout: true).trim()
                         if (beanstalkUrl) {
                             echo "Beanstalk Environment URL: ${beanstalkUrl}"
-                            env.BACKEND_URL = beanstalkUrl
+                            env.BACKEND_URL = "http://" + beanstalkUrl
                         } else {
                             echo 'No Beanstalk environment found'
                         }
