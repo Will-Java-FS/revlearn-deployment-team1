@@ -1,9 +1,9 @@
 # S3 bucket for hosting frontend assets
 resource "aws_s3_bucket" "frontend_build" {
-  bucket = "revlearn-frontend-build"
+  bucket = "frontend.revaturelearn.com"
 
   tags = {
-    Name = "revlearn-frontend-build"
+    Name = "frontend.revaturelearn.com"
     Owner = "Trey-Crossley"
   }
 }
@@ -54,25 +54,6 @@ resource "aws_s3_bucket_versioning" "frontend_build_versioning" {
     status = "Enabled"
   }
 }
-
-# Optional: S3 Bucket Policy to make files publicly accessible
-# resource "aws_s3_bucket_policy" "frontend_build_policy" {
-#   bucket = aws_s3_bucket.frontend_build.id
-
-#   policy = jsonencode({
-#     Version = "2012-10-17",
-#     Statement = [
-#       {
-#         Effect = "Allow",
-#         Principal = "*",
-#         Action = [ 
-#           "s3:GetObject",
-#         ],
-#         Resource = "${aws_s3_bucket.frontend_build.arn}/*"
-#       }
-#     ]
-#   })
-# }
 
 # Optional: CORS configuration if needed
 resource "aws_s3_bucket_cors_configuration" "frontend_build_cors" {
