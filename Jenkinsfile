@@ -9,7 +9,7 @@ pipeline {
         KAFKA_TAG = 'kafka-ec2'
         JENKINS_TAG = 'jenkins-ec2'
         RDS_IDENTIFIER = 'revlearn-db'
-        FRONTEND_BUCKET_TAG = 'revlearn-frontend-build'
+        FRONTEND_BUCKET_NAME = 'revlearn-frontend-build'
         BEANSTALK_ENV_NAME = 'revlearn-springboot-env'
     }
 
