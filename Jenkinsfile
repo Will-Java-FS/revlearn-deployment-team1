@@ -105,13 +105,12 @@ pipeline {
 
 
                         // Find Frontend S3 Bucket
-                        def s3BucketName = sh(script: "aws s3api list-buckets --query \"Buckets[?Tags[?Key=='Name' && Value=='${env.FRONTEND_BUCKET_TAG}']].Name\" --output text", returnStdout: true).trim()
-                        if (s3BucketName) {
-                            echo "Frontend S3 Bucket Name: ${s3BucketName}"
-                            env.S3_BUCKET_NAME = s3BucketName
-                        } else {
-                            echo 'No S3 bucket found'
-                        }
+                        echo "Frontend S3 Bucket Name: ${env.FRONTEND_BUCKET_NAME}"
+                        env.S3_BUCKET_NAME = env.FRONTEND_BUCKET_NAME
+                        // Construct the S3 bucket URL
+                        def s3BucketUrl = "https://${env.S3_BUCKET_NAME}.s3.amazonaws.com/"
+                        echo "Frontend S3 Bucket URL: ${s3BucketUrl}"
+                        env.S3_BUCKET_URL = s3BucketUrl
 
                         // Find Beanstalk Environment URL
                         def beanstalkUrl = sh(script: "aws elasticbeanstalk describe-environments --environment-names ${env.BEANSTALK_ENV_NAME} --query 'Environments[0].CNAME' --output text", returnStdout: true).trim()
