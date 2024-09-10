@@ -48,13 +48,3 @@ else
     echo "No instance found with the specified tags."
 fi
 
-SONAR_DNS=$(aws ec2 describe-instances \
-    --filters "Name=tag:Owner,Values=$OWNER_TAG" "Name=tag:Name,Values=$SONAR_TAG" \
-    --query "Reservations[*].Instances[*].PublicDnsName" \
-    --output text)
-
-if [ -n "$SONAR_DNS" ]; then
-    echo "The Public DNS of Sonar is: $SONAR_DNS"
-else
-    echo "No instance found with the specified tags."
-fi
