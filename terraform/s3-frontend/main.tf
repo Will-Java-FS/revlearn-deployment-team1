@@ -45,10 +45,3 @@ resource "aws_s3_bucket_cors_configuration" "frontend_build_cors" {
     max_age_seconds = 3000
   }
 }
-
-resource "aws_s3_bucket_public_access_block" "frontend_build_public_access" {
-  bucket = aws_s3_bucket.frontend_build.id
-
-  block_public_acls   = false
-  block_public_policy = false
-}
