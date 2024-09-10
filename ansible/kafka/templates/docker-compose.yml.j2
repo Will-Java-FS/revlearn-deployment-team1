@@ -3,7 +3,7 @@ services:
     image: wurstmeister/zookeeper:latest
     container_name: zookeeper
     ports:
-      - "2181:2181"
+      - "{{ zookeeper_port }}:2181"
     networks:
       - kafka-network
 
@@ -11,14 +11,14 @@ services:
     image: wurstmeister/kafka:latest
     container_name: kafka
     ports:
-      - "9092:9092"
-      - "9093:9093"  # Expose the OUTSIDE port as well
+      - "{{ kafka_inside_port }}:9092"
+      - "{{ kafka_outside_port }}:9093"  # Expose the OUTSIDE port as well
     environment:
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://localhost:9093
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:{{ kafka_inside_port }},OUTSIDE://{{ kafka_advertised_outside }}:{{ kafka_outside_port }}
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:{{ kafka_inside_port }},OUTSIDE://0.0.0.0:{{ kafka_outside_port }}
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:{{ zookeeper_port }}
     depends_on:
       - zookeeper
     networks:

@@ -8,9 +8,14 @@
 
 - name: Copy Docker Compose file to EC2
   template:
-    src: docker-compose.yml
+    src: docker-compose.yml.j2
     dest: "{{ docker_path }}/docker-compose.yml"
     mode: '0644'
+  vars:
+    zookeeper_port: 2181
+    kafka_inside_port: 9092
+    kafka_outside_port: 9093
+    kafka_advertised_outside: "{{ ansible_host }}"
 
 - name: Start Docker Compose
   command: "docker compose up -d"
