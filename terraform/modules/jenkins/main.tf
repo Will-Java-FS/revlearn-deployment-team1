@@ -127,18 +127,15 @@ resource "aws_security_group" "jenkins_sg" {
   }
 }
 
-resource "random_id" "suffix" {
-  byte_length = 4
-}
-
 resource "aws_s3_bucket" "jenkins_s3_bucket" {
-  bucket = "jenkins-s3-bucket-tc-${random_id.suffix.hex}"
+  bucket = "jenkins-s3-bucket-tc"  # Static bucket name
   
   tags = {
-    Name = "jenkins-s3-bucket-tc-${random_id.suffix.hex}"
+    Name  = "jenkins-s3-bucket-tc"
     Owner = "Trey-Crossley"
   }
 }
+
 
 #make sure is private and not open to public and create Access control List
 resource "aws_s3_bucket_acl" "s3_bucket_acl" {
