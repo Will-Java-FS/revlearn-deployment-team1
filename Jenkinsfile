@@ -95,7 +95,16 @@ pipeline {
                         }
 
                         // Find RDS instance
-                        def rdsInstanceId = sh(script: "aws rds describe-db-instances --filters \"Name=tag:Name,Values=${env.RDS_TAG}\" --query \"DBInstances[*].DBInstanceIdentifier\" --output text", returnStdout: true).trim()
+                         // Find RDS instance by tags
+                        def dbInstances = sh(script: "aws rds describe-db-instances --query 'DBInstances[*].DBInstanceIdentifier' --output text", returnStdout: true).trim().split()
+                        def rdsInstanceId = ''
+                        for (instanceId in dbInstances) {
+                            def tags = sh(script: "aws rds list-tags-for-resource --resource-arn arn:aws:rds:${AWS_REGION}:${env.AWS_ACCOUNT_ID}:db:${instanceId} --query 'TagList[?Key==`Name` && Value==`${env.RDS_TAG}`]' --output text", returnStdout: true).trim()
+                            if (tags) {
+                                rdsInstanceId = instanceId
+                                break
+                            }
+                        }
                         if (rdsInstanceId) {
                             def rdsEndpoint = sh(script: "aws rds describe-db-instances --db-instance-identifier ${rdsInstanceId} --query \"DBInstances[*].Endpoint.Address\" --output text", returnStdout: true).trim()
                             echo "RDS Endpoint: ${rdsEndpoint}"
@@ -103,6 +112,7 @@ pipeline {
                         } else {
                             echo 'No RDS instance found'
                         }
+
 
                         // Find Frontend S3 Bucket
                         def s3BucketName = sh(script: 'aws s3api list-buckets --query "Buckets[?Tags[?Key==`Name` && Value==`' + env.FRONTEND_BUCKET_TAG + '`]].Name" --output text', returnStdout: true).trim()
