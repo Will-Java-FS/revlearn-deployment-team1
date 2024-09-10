@@ -105,7 +105,7 @@ pipeline {
 
 
                         // Find Frontend S3 Bucket
-                        def s3BucketName = sh(script: 'aws s3api list-buckets --query "Buckets[?Tags[?Key==`Name` && Value==`' + env.FRONTEND_BUCKET_TAG + '`]].Name" --output text', returnStdout: true).trim()
+                        def s3BucketName = sh(script: "aws s3api list-buckets --query \"Buckets[?Tags[?Key=='Name' && Value=='${env.FRONTEND_BUCKET_TAG}']].Name\" --output text", returnStdout: true).trim()
                         if (s3BucketName) {
                             echo "Frontend S3 Bucket Name: ${s3BucketName}"
                             env.S3_BUCKET_NAME = s3BucketName
