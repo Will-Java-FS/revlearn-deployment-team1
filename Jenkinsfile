@@ -106,9 +106,8 @@ pipeline {
 
                         // Find Frontend S3 Bucket
                         echo "Frontend S3 Bucket Name: ${env.FRONTEND_BUCKET_NAME}"
-                        env.S3_BUCKET_NAME = env.FRONTEND_BUCKET_NAME
                         // Construct the S3 bucket URL
-                        def s3BucketUrl = "https://${env.S3_BUCKET_NAME}.s3.amazonaws.com/"
+                        def s3BucketUrl = "https://${env.FRONTEND_BUCKET_NAME}.s3.amazonaws.com/"
                         echo "Frontend S3 Bucket URL: ${s3BucketUrl}"
                         env.S3_BUCKET_URL = s3BucketUrl
 
@@ -133,7 +132,7 @@ pipeline {
                         def secretsJson = [
                             kafka_url: env.KAFKA_PUBLIC_DNS ?: '',
                             jenkins_url: env.JENKINS_PUBLIC_DNS ?: '',
-                            frontend_url: env.S3_BUCKET_NAME ? "s3://${env.S3_BUCKET_NAME}" : '',
+                            frontend_url: env.S3_BUCKET_URL ? "s3://${env.FRONTEND_BUCKET_NAME}" : '',
                             rds_url: env.RDS_ENDPOINT ?: '',
                             backend_url: env.BACKEND_URL ?: ''
                         ]
