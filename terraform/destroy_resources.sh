@@ -1,28 +1,34 @@
 #!/bin/bash
 
+# List of directories in the order they should be destroyed
+DIRECTORIES=(
+  "kafka"
+  "beanstalk"
+  "rds"
+  "s3-frontend"
+  "sonarqube"
+  "jenkins"
+  "network"
+)
+
 # Function to run terraform destroy
 destroy_terraform() {
   DIR=$1
   echo "Destroying resources in $DIR..."
   cd $DIR || { echo "Failed to enter directory $DIR"; exit 1; }
+  terraform init -input=false
   terraform destroy -auto-approve
   cd - || exit
   echo "Resources destroyed in $DIR."
 }
 
-# Check if at least one argument (directory) is provided
-if [ "$#" -eq 0 ]; then
-  echo "Usage: $0 <directory1> <directory2> ... <directoryN>"
-  exit 1
-fi
-
-# Prompt for confirmation once at the beginning
-read -r -p "This script will destroy resources in all specified directories. Are you sure you want to proceed? (y/N) " response
+# Prompt for confirmation before proceeding
+read -r -p "This script will destroy resources in the following order: ${DIRECTORIES[*]}. Are you sure you want to proceed? (y/N) " response
 case "$response" in
   [yY]*)
     echo "Proceeding with Terraform destroy..."
-    # Loop through all provided directories and destroy resources
-    for dir in "$@"; do
+    # Loop through all directories in the predefined order and destroy resources
+    for dir in "${DIRECTORIES[@]}"; do
       destroy_terraform "$dir"
     done
     echo "Terraform destroy completed for all specified directories."
