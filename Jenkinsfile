@@ -107,7 +107,7 @@ pipeline {
                         // Find Frontend S3 Bucket
                         echo "Frontend S3 Bucket Name: ${env.FRONTEND_BUCKET_NAME}"
                         // Construct the S3 bucket URL
-                        def s3BucketUrl = "http://${env.FRONTEND_BUCKET_NAME}.s3.amazonaws.com/"
+                        def s3BucketUrl = "http://${env.FRONTEND_BUCKET_NAME}.s3-website-${env.AWS_REGION}.amazonaws.com/"
                         echo "Frontend S3 Bucket URL: ${s3BucketUrl}"
                         env.S3_BUCKET_URL = s3BucketUrl
 
