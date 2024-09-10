@@ -8,8 +8,8 @@ data "terraform_remote_state" "network" {
   }
 }
 
-module "beanstalk" {
-  source = "../modules/beanstalk"
+module "jenkins" {
+  source = "../modules/jenkins"
 
   vpc_id     = data.terraform_remote_state.network.outputs.vpc_id
   subnet_id = data.terraform_remote_state.network.outputs.public_subnet_ids[0]

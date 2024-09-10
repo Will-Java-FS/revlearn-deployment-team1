@@ -7,17 +7,11 @@ terraform {
       version = "~> 5.0"
     }
   }
-    backend "s3" {
+  backend "s3" {
     bucket         = "revlearn-tfstate"  # Replace with the name of your S3 bucket
     region         = "us-east-1"                    # Ensure this matches your bucket's region
     dynamodb_table = "app-state"              # Replace with the name of your DynamoDB table
     encrypt        = true
-    key            = "terraform.tfstate"
+    key            = "frontend/terraform.tfstate"
   }
-}
-
-
-provider "aws" {
-  # Configuration options
-  region = "us-east-1"
 }

@@ -22,7 +22,16 @@
       - git
       - docker
       - jenkins
+      - ansible
+      - python3-pip
     state: present
+
+- name: Install boto3 and botocore
+  pip:
+    name:
+      - boto3
+      - botocore
+    state: latest
 
 
 - name: Download and install TFLint
