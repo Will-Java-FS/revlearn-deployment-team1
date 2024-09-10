@@ -34,6 +34,7 @@ resource "aws_elastic_beanstalk_environment" "springboot_env" {
   }
 
   tags = {
-    Name = "springboot-app-environment"
+    Name = "revlearn-springboot-env"
+    Owner = "Trey-Crossley"
   }
 }
