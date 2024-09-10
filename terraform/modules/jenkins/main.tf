@@ -31,6 +31,11 @@ resource "aws_iam_policy" "secrets_manager_policy" {
         Effect   = "Allow",
         Action   = "ec2:DescribeInstances",
         Resource = "*"
+      },
+       {
+        Effect   = "Allow",
+        Action   = "s3:PutBucketPolicy",
+        Resource = "*"
       }
     ]
   })

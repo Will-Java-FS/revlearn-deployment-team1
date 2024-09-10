@@ -1,5 +1,5 @@
 resource "aws_elastic_beanstalk_environment" "springboot_env" {
-  name                = "springboot-env"
+  name                = "revlearn-springboot-env"
   application         = aws_elastic_beanstalk_application.springboot_app.name
   solution_stack_name = "64bit Amazon Linux 2 v3.7.5 running Corretto 17" # Adjust based on your JDK version
 
@@ -34,6 +34,7 @@ resource "aws_elastic_beanstalk_environment" "springboot_env" {
   }
 
   tags = {
-    Name = "springboot-app-environment"
+    Name = "revlearn-springboot-env"
+    Owner = "Trey-Crossley"
   }
 }
