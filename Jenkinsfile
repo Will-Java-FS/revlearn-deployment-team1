@@ -8,7 +8,7 @@ pipeline {
         GIT_URL = 'https://github.com/Will-Java-FS/revlearn-deployment-team1'
         KAFKA_TAG = 'kafka-ec2'
         JENKINS_TAG = 'jenkins-ec2'
-        RDS_TAG = 'revlearn_rds'
+        RDS_IDENTIFIER = 'revlearn-rds'
         FRONTEND_BUCKET_TAG = 'revlearn-frontend-build'
         BEANSTALK_ENV_NAME = 'revlearn-springboot-env'
     }
@@ -94,19 +94,9 @@ pipeline {
                             echo 'No Jenkins EC2 instance found'
                         }
 
-                        // Find RDS instance
-                         // Find RDS instance by tags
-                        def dbInstances = sh(script: "aws rds describe-db-instances --query 'DBInstances[*].DBInstanceIdentifier' --output text", returnStdout: true).trim().split()
-                        def rdsInstanceId = ''
-                        for (instanceId in dbInstances) {
-                            def tags = sh(script: "aws rds list-tags-for-resource --resource-arn arn:aws:rds:${AWS_REGION}:${env.AWS_ACCOUNT_ID}:db:${instanceId} --query 'TagList[?Key==`Name` && Value==`${env.RDS_TAG}`]' --output text", returnStdout: true).trim()
-                            if (tags) {
-                                rdsInstanceId = instanceId
-                                break
-                            }
-                        }
-                        if (rdsInstanceId) {
-                            def rdsEndpoint = sh(script: "aws rds describe-db-instances --db-instance-identifier ${rdsInstanceId} --query \"DBInstances[*].Endpoint.Address\" --output text", returnStdout: true).trim()
+                        // Find RDS instance using identifier
+                        def rdsEndpoint = sh(script: "aws rds describe-db-instances --db-instance-identifier ${env.RDS_IDENTIFIER} --query \"DBInstances[0].Endpoint.Address\" --output text", returnStdout: true).trim()
+                        if (rdsEndpoint) {
                             echo "RDS Endpoint: ${rdsEndpoint}"
                             env.RDS_ENDPOINT = rdsEndpoint
                         } else {
