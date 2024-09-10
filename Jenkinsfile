@@ -64,6 +64,17 @@ pipeline {
                 }
             }
         }
+
+        stage('Run Ansible') {
+            steps {
+                script {
+                    dir('ansible') {
+                        echo "Running Ansible configuration for Kafka"
+                        sh 'sh run_ansible.sh kafka'
+                    }
+                }
+            }
+        }
     }
 
     post {
