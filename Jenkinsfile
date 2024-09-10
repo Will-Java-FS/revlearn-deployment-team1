@@ -8,7 +8,7 @@ pipeline {
         GIT_URL = 'https://github.com/Will-Java-FS/revlearn-deployment-team1'
         KAFKA_TAG = 'kafka-ec2'
         JENKINS_TAG = 'jenkins-ec2'
-        RDS_IDENTIFIER = 'revlearn-rds'
+        RDS_IDENTIFIER = 'revlearn-db'
         FRONTEND_BUCKET_TAG = 'revlearn-frontend-build'
         BEANSTALK_ENV_NAME = 'revlearn-springboot-env'
     }
