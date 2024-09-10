@@ -26,6 +26,11 @@ resource "aws_iam_policy" "secrets_manager_policy" {
         Effect   = "Allow"
         Action   = "secretsmanager:*"
         Resource = "*"
+      },
+       {
+        Effect   = "Allow",
+        Action   = "ec2:DescribeInstances",
+        Resource = "*"
       }
     ]
   })
@@ -122,26 +127,28 @@ resource "aws_security_group" "jenkins_sg" {
   }
 }
 
-#Create S3 bucket for Jenksin Artifacts
-resource "aws_s3_bucket" "jenkins-s3-bucket" {
-  bucket = "jenkins-s3-bucket-tc"
+resource "random_id" "suffix" {
+  byte_length = 4
+}
 
-   tags = {
-    Name = "jenkins-s3-bucket-tc"
-    Owner    = "Trey-Crossley"
+resource "aws_s3_bucket" "jenkins_s3_bucket" {
+  bucket = "jenkins-s3-bucket-tc-${random_id.suffix.hex}"
+  
+  tags = {
+    Name = "jenkins-s3-bucket-tc-${random_id.suffix.hex}"
+    Owner = "Trey-Crossley"
   }
 }
 
 #make sure is private and not open to public and create Access control List
 resource "aws_s3_bucket_acl" "s3_bucket_acl" {
-  bucket = aws_s3_bucket.jenkins-s3-bucket.id
+  bucket = aws_s3_bucket.jenkins_s3_bucket.id  # Correct reference
   acl    = "private"
   depends_on = [aws_s3_bucket_ownership_controls.s3_bucket_acl_ownership]
 }
 
-# Resource to avoid error "AccessControlListNotSupported: The bucket does not allow ACLs"
 resource "aws_s3_bucket_ownership_controls" "s3_bucket_acl_ownership" {
-  bucket = aws_s3_bucket.jenkins-s3-bucket.id
+  bucket = aws_s3_bucket.jenkins_s3_bucket.id  # Correct reference
   rule {
     object_ownership = "ObjectWriter"
   }
