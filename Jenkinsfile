@@ -114,7 +114,7 @@ pipeline {
                         }
 
                         // Find Beanstalk Environment URL
-                        def beanstalkUrl = sh(script: "aws elasticbeanstalk describe-environments --environment-names ${env.BEANSTALK_ENV_NAME} --query \"Environments[0].CNAME\" --output text", returnStdout: true).trim()
+                        def beanstalkUrl = sh(script: "aws elasticbeanstalk describe-environments --environment-names ${env.BEANSTALK_ENV_NAME} --query 'Environments[0].CNAME' --output text", returnStdout: true).trim()
                         if (beanstalkUrl) {
                             echo "Beanstalk Environment URL: ${beanstalkUrl}"
                             env.BACKEND_URL = beanstalkUrl
