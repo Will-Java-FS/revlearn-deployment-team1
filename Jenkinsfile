@@ -8,6 +8,7 @@ pipeline {
         GIT_URL = 'https://github.com/Will-Java-FS/revlearn-deployment-team1'
         KAFKA_TAG = 'kafka-ec2'
         JENKINS_TAG = 'jenkins-ec2'
+        SPRINGBOOT_TAG = 'springboot-ec2'
         RDS_IDENTIFIER = 'revlearn-db'
         FRONTEND_BUCKET_NAME = 'frontend.revaturelearn.com'
         BEANSTALK_ENV_NAME = 'revlearn-springboot-env'
@@ -94,6 +95,16 @@ pipeline {
                             echo 'No Jenkins EC2 instance found'
                         }
 
+                        // Find Spring Boot EC2 instance
+                        def springBootInstanceId = sh(script: "aws ec2 describe-instances --filters \"Name=tag:Name,Values=${env.SPRINGBOOT_TAG}\" --query \"Reservations[*].Instances[*].InstanceId\" --output text", returnStdout: true).trim()
+                        if (springBootInstanceId) {
+                            def springBootPublicDns = sh(script: "aws ec2 describe-instances --instance-ids ${springBootInstanceId} --query \"Reservations[*].Instances[*].PublicDnsName\" --output text", returnStdout: true).trim()
+                            echo "Spring Boot EC2 Public DNS: ${springBootPublicDns}"
+                            env.SPRINGBOOT_PUBLIC_DNS = "http://" + springBootPublicDns
+                        } else {
+                            echo 'No Spring Boot EC2 instance found'
+                        }
+
                         // Find RDS instance using identifier
                         def rdsEndpoint = sh(script: "aws rds describe-db-instances --db-instance-identifier ${env.RDS_IDENTIFIER} --query \"DBInstances[0].Endpoint.Address\" --output text", returnStdout: true).trim()
                         if (rdsEndpoint) {
@@ -110,15 +121,6 @@ pipeline {
                         def s3BucketUrl = "http://${env.FRONTEND_BUCKET_NAME}.s3-website-${env.AWS_REGION}.amazonaws.com/"
                         echo "Frontend S3 Bucket URL: ${s3BucketUrl}"
                         env.S3_BUCKET_URL = s3BucketUrl
-
-                        // Find Beanstalk Environment URL
-                        def beanstalkUrl = sh(script: "aws elasticbeanstalk describe-environments --environment-names ${env.BEANSTALK_ENV_NAME} --query 'Environments[0].CNAME' --output text", returnStdout: true).trim()
-                        if (beanstalkUrl) {
-                            echo "Beanstalk Environment URL: ${beanstalkUrl}"
-                            env.BACKEND_URL = "http://" + beanstalkUrl
-                        } else {
-                            echo 'No Beanstalk environment found'
-                        }
                     }
                 }
             }
@@ -134,7 +136,7 @@ pipeline {
                             jenkins_url: env.JENKINS_PUBLIC_DNS ?: '',
                             frontend_url: env.S3_BUCKET_URL ?: '',
                             rds_url: env.RDS_ENDPOINT ?: '',
-                            backend_url: env.BACKEND_URL ?: ''
+                            backend_url: env.SPRINGBOOT_PUBLIC_DNS ?: ''
                         ]
                         def secretsString = groovy.json.JsonOutput.toJson(secretsJson)
 
