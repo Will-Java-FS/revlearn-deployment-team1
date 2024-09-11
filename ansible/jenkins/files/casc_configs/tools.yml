@@ -6,7 +6,7 @@ tool:
       - installSource:
           installers:
           - fromDocker:
-              version: "1.10.0"
+              version: "latest"
   git:
     installations:
     - home: "git"
