@@ -6,8 +6,15 @@ resource "aws_elastic_beanstalk_environment" "springboot_env" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
-    value     = "t3.micro"  # Adjust instance type as needed
+    value     = "t3.small"  # Adjust instance type as needed
   }
+
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "EC2KeyName"
+    value     = aws_key_pair.beanstalk_key_pair.key_name
+  }
+
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -20,6 +27,7 @@ resource "aws_elastic_beanstalk_environment" "springboot_env" {
     name      = "EnvironmentType"
     value     = "SingleInstance" # LoadBalanced Or SingleInstance for smaller setups
   }
+
 
   setting {
     namespace = "aws:ec2:vpc"

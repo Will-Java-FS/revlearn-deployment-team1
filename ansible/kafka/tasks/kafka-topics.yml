@@ -1,0 +1,18 @@
+- name: Ensure Kafka container is running
+  docker_container:
+    name: kafka
+    state: started
+
+- name: Create Kafka topic 'transactions'
+  command: >
+    docker exec kafka kafka-topics.sh
+    --create --topic transactions
+    --bootstrap-server localhost:9093
+    --partitions 1
+    --replication-factor 1
+  register: kafka_topic_creation
+  ignore_errors: true
+
+- name: Debug Kafka topic creation result
+  debug:
+    msg: "{{ kafka_topic_creation.stdout }}"
