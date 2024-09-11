@@ -1,12 +1,12 @@
 resource "aws_elastic_beanstalk_environment" "springboot_env" {
   name                = "revlearn-springboot-env"
   application         = aws_elastic_beanstalk_application.springboot_app.name
-  solution_stack_name = "64bit Amazon Linux 2 v3.7.5 running Corretto 17" # Adjust based on your JDK version
+  solution_stack_name = "64bit Amazon Linux 2023 v4.3.7 running Docker"
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
-    value     = "t3.small"  # Adjust instance type as needed
+    value     = "t3.medium"  # Adjust instance type as needed
   }
 
   setting {

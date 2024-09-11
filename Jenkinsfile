@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                     dir('terraform') { // Change into 'terraform' directory
-                        def dirs = ['.', 'network', 'kafka', 'rds', 'beanstalk', 's3-frontend', 'sonarqube', 's3-backend', 'jenkins']
+                        def dirs = ['.', 'network', 'kafka', 'rds', 'springboot', 's3-frontend', 'sonarqube', 's3-backend', 'jenkins']
                         for (dirName in dirs) {
                             dir(dirName) {
                                 echo "TFLint: ${dirName == '.' ? 'Root' : dirName.capitalize()}"
@@ -54,7 +54,7 @@ pipeline {
             steps {
                 script {
                     dir('terraform') {
-                        def dirs = [ 'rds','kafka', 'beanstalk', 's3-frontend'] // Add the directories you want to apply Terraform in
+                        def dirs = [ 'rds','kafka', 'springboot', 's3-frontend'] // Add the directories you want to apply Terraform in
                         for (dirName in dirs) {
                             dir(dirName) { // Change to the specific subdirectory
                                 echo "Terraform Apply in ${dirName.capitalize()}"

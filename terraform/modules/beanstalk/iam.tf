@@ -20,6 +20,11 @@ resource "aws_iam_role_policy_attachment" "beanstalk_ec2_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
 }
 
+resource "aws_iam_role_policy_attachment" "ecr_read_only_policy" {
+  role       = aws_iam_role.beanstalk_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
 resource "aws_iam_instance_profile" "beanstalk_ec2_profile" {
   name = "beanstalk-ec2-profile"
   role = aws_iam_role.beanstalk_ec2_role.name
