@@ -75,34 +75,34 @@ pipeline {
             steps {
                 script {
                     withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS}") {
-                        // Find Kafka EC2 instance
-                        def kafkaInstanceId = sh(script: "aws ec2 describe-instances --filters \"Name=tag:Name,Values=${env.KAFKA_TAG}\" --query \"Reservations[*].Instances[*].InstanceId\" --output text", returnStdout: true).trim()
+                        // Find Kafka EC2 instance (Running state only)
+                        def kafkaInstanceId = sh(script: "aws ec2 describe-instances --filters \"Name=tag:Name,Values=${env.KAFKA_TAG}\" \"Name=instance-state-name,Values=running\" --query \"Reservations[*].Instances[*].InstanceId\" --output text", returnStdout: true).trim()
                         if (kafkaInstanceId) {
                             def kafkaPublicDns = sh(script: "aws ec2 describe-instances --instance-ids ${kafkaInstanceId} --query \"Reservations[*].Instances[*].PublicDnsName\" --output text", returnStdout: true).trim()
                             echo "Kafka EC2 Public DNS: ${kafkaPublicDns}"
                             env.KAFKA_PUBLIC_DNS = kafkaPublicDns
                         } else {
-                            echo 'No Kafka EC2 instance found'
+                            echo 'No running Kafka EC2 instance found'
                         }
 
-                        // Find Jenkins EC2 instance
-                        def jenkinsInstanceId = sh(script: "aws ec2 describe-instances --filters \"Name=tag:Name,Values=${env.JENKINS_TAG}\" --query \"Reservations[*].Instances[*].InstanceId\" --output text", returnStdout: true).trim()
+                        // Find Jenkins EC2 instance (Running state only)
+                        def jenkinsInstanceId = sh(script: "aws ec2 describe-instances --filters \"Name=tag:Name,Values=${env.JENKINS_TAG}\" \"Name=instance-state-name,Values=running\" --query \"Reservations[*].Instances[*].InstanceId\" --output text", returnStdout: true).trim()
                         if (jenkinsInstanceId) {
                             def jenkinsPublicDns = sh(script: "aws ec2 describe-instances --instance-ids ${jenkinsInstanceId} --query \"Reservations[*].Instances[*].PublicDnsName\" --output text", returnStdout: true).trim()
                             echo "Jenkins EC2 Public DNS: ${jenkinsPublicDns}"
                             env.JENKINS_PUBLIC_DNS = "http://" + jenkinsPublicDns
                         } else {
-                            echo 'No Jenkins EC2 instance found'
+                            echo 'No running Jenkins EC2 instance found'
                         }
 
-                        // Find Spring Boot EC2 instance
-                        def springBootInstanceId = sh(script: "aws ec2 describe-instances --filters \"Name=tag:Name,Values=${env.SPRINGBOOT_TAG}\" --query \"Reservations[*].Instances[*].InstanceId\" --output text", returnStdout: true).trim()
+                        // Find Spring Boot EC2 instance (Running state only)
+                        def springBootInstanceId = sh(script: "aws ec2 describe-instances --filters \"Name=tag:Name,Values=${env.SPRINGBOOT_TAG}\" \"Name=instance-state-name,Values=running\" --query \"Reservations[*].Instances[*].InstanceId\" --output text", returnStdout: true).trim()
                         if (springBootInstanceId) {
                             def springBootPublicDns = sh(script: "aws ec2 describe-instances --instance-ids ${springBootInstanceId} --query \"Reservations[*].Instances[*].PublicDnsName\" --output text", returnStdout: true).trim()
                             echo "Spring Boot EC2 Public DNS: ${springBootPublicDns}"
                             env.SPRINGBOOT_PUBLIC_DNS = "http://" + springBootPublicDns + ":8080"
                         } else {
-                            echo 'No Spring Boot EC2 instance found'
+                            echo 'No running Spring Boot EC2 instance found'
                         }
 
                         // Find RDS instance using identifier
@@ -114,7 +114,6 @@ pipeline {
                             echo 'No RDS instance found'
                         }
 
-
                         // Find Frontend S3 Bucket
                         echo "Frontend S3 Bucket Name: ${env.FRONTEND_BUCKET_NAME}"
                         // Construct the S3 bucket URL
@@ -125,6 +124,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Save URLS to Secrets Manager') {
             steps {
