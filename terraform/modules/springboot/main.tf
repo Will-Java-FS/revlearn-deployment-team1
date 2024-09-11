@@ -51,6 +51,31 @@ resource "aws_iam_role" "ec2_role" {
   })
 }
 
+resource "aws_iam_policy" "ecr_access_policy" {
+  name        = "ECRAccessPolicy"
+  description = "Policy to allow ECR access for EC2 instances"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Action    = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage"
+        ]
+        Resource  = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_access_policy_attachment" {
+  policy_arn = aws_iam_policy.ecr_access_policy.arn
+  role      = aws_iam_role.ec2_role.name
+}
+
 resource "aws_iam_role_policy_attachment" "attach_secrets_manager_policy" {
   role     = aws_iam_role.ec2_role.name
   policy_arn = aws_iam_policy.secrets_manager_policy.arn

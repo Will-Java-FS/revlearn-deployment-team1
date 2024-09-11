@@ -1,0 +1,7 @@
+# playbook.yml
+---
+- hosts: springboot
+  become: yes
+  gather_facts: yes
+  roles:
+    - springboot

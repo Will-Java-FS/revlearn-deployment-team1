@@ -100,7 +100,7 @@ pipeline {
                         if (springBootInstanceId) {
                             def springBootPublicDns = sh(script: "aws ec2 describe-instances --instance-ids ${springBootInstanceId} --query \"Reservations[*].Instances[*].PublicDnsName\" --output text", returnStdout: true).trim()
                             echo "Spring Boot EC2 Public DNS: ${springBootPublicDns}"
-                            env.SPRINGBOOT_PUBLIC_DNS = "http://" + springBootPublicDns
+                            env.SPRINGBOOT_PUBLIC_DNS = "http://" + springBootPublicDns + ":8080"
                         } else {
                             echo 'No Spring Boot EC2 instance found'
                         }
@@ -155,6 +155,9 @@ pipeline {
                     dir('ansible') {
                         echo 'Running Ansible configuration for Kafka'
                         sh 'sh run_ansible.sh kafka'
+
+                        echo 'Running Ansible configuration for Spring Boot'
+                        sh 'sh run_ansible.sh springboot'
                     }
                 }
             }
